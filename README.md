@@ -41,7 +41,7 @@ SQL
 
 -- Cria a tabela 'funcionario'
 CREATE TABLE funcionario (
-    funcionario_id INT PRIMARY KEY,
+    funcionario_id SERIAL PRIMARY KEY,
     atuacao_enum VARCHAR(1),
     nome VARCHAR(150),
     email_usuario VARCHAR(50),
@@ -50,7 +50,7 @@ CREATE TABLE funcionario (
 
 -- Cria a tabela 'evento'
 CREATE TABLE evento (
-    evento_id INT PRIMARY KEY,
+    evento_id SERIAL PRIMARY KEY,
     funcionario_id INT,
     titulo VARCHAR(50),
     data_2 DATE,
@@ -61,12 +61,16 @@ CREATE TABLE evento (
 
 -- Cria a tabela 'lista_de_presenca'
 CREATE TABLE lista_de_presenca (
-    evento_id INT,
-    nome_aluno VARCHAR(50),
+    id BIGSERIAL PRIMARY KEY,
+    evento_id INT NOT NULL,
+    nome_aluno VARCHAR(50) NOT NULL,
     presenca_enum CHAR(1),
-    PRIMARY KEY (evento_id, nome_aluno),
     FOREIGN KEY (evento_id) REFERENCES evento(evento_id)
 );
 
 🎉 Tudo Pronto!
 Com o banco de dados configurado, você já pode rodar a aplicação sem problemas.
+
+Em caso de erro com o tipo de dado UUID, rodar esse comando no banco:
+ALTER TABLE evento
+ALTER COLUMN uuid_arquivo TYPE uuid USING uuid_arquivo::uuid;
