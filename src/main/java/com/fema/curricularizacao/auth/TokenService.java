@@ -1,48 +1,65 @@
 package com.fema.curricularizacao.auth;
 
 import com.fema.curricularizacao.models.Funcionario;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.crypto.SecretKey;
+import java.security.Key;
 import java.util.Date;
 
 @Service
 public class TokenService {
 
-    @Value("${jwt.secret}")
-    private String secret;
+    private final Key chave;
 
-    @Value("${jwt.expiration}")
-    private Long expiration;
+    public TokenService() {
+        String secret = System.getenv("JWT_SECRET");
+        if (secret == null || secret.length() < 32) {
+            secret = "muda_para_uma_chave_secreta_maior_de_32_bytes";
+        }
+        this.chave = Keys.hmacShaKeyFor(secret.getBytes());
+    }
 
     public String gerarToken(Funcionario funcionario) {
         Date agora = new Date();
-        Date dataExpiracao = new Date(agora.getTime() + expiration);
-
-        SecretKey chaveSecreta = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
+        Date expiracao = new Date(agora.getTime() + 24 * 60 * 60 * 1000);
 
         return Jwts.builder()
-                .setIssuer("API Curricularização")
                 .setSubject(funcionario.getEmail())
                 .setIssuedAt(agora)
-                .setExpiration(dataExpiracao)
-                .signWith(chaveSecreta, SignatureAlgorithm.HS256)
+                .setExpiration(expiracao)
+                .signWith(chave)
                 .compact();
     }
 
-    public String getSubjectToken(String token) {
-        SecretKey chaveSecreta = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
+    public boolean isTokenValido(String token) {
+        try {
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(chave)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
 
-        return Jwts.parser()
-                .verifyWith(chaveSecreta)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload()
-                .getSubject();
+            Date expiration = claims.getExpiration();
+            return expiration == null || expiration.after(new Date());
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public String getEmailFromToken(String token) {
+        try {
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(chave)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+
+            return claims.getSubject();
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

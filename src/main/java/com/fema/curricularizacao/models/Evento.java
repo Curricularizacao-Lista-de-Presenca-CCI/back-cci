@@ -23,10 +23,10 @@ public class Evento {
     @Column(name = "titulo")
     private String titulo;
 
-    @Column(name = "data_2")
+    @Column(name = "data")
     private LocalDateTime data;
 
-    @Column(name = "local_2")
+    @Column(name = "local")
     private String local;
 
     @Column(name = "uuid_arquivo")
