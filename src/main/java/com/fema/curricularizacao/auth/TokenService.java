@@ -2,7 +2,6 @@ package com.fema.curricularizacao.auth;
 
 import com.fema.curricularizacao.models.Funcionario;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,11 +26,11 @@ public class TokenService {
         SecretKey chaveSecreta = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
 
         return Jwts.builder()
-                .setIssuer("API Curricularização")
-                .setSubject(funcionario.getEmail())
-                .setIssuedAt(agora)
-                .setExpiration(dataExpiracao)
-                .signWith(chaveSecreta, SignatureAlgorithm.HS256)
+                .issuer("API Curricularização")
+                .subject(funcionario.getEmail())
+                .issuedAt(agora)
+                .expiration(dataExpiracao)
+                .signWith(chaveSecreta)
                 .compact();
     }
 
