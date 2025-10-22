@@ -29,7 +29,7 @@ public class Evento {
     @Column(name = "local_2")
     private String local;
 
-    @Column(name = "uuid_arquivo", length = 36)
+    @Column(name = "uuid_arquivo")
     private UUID arquivo;
 
     @ManyToOne
