@@ -10,17 +10,8 @@ Antes de começar, você só precisa ter duas coisas instaladas:
 👨‍💻 pgAdmin: Uma ferramenta visual para gerenciar o banco de forma fácil.
 
 🔧 Configuração da Conexão
-A aplicação já sabe como se conectar ao banco. As credenciais estão no arquivo application.properties e são as seguintes:
+A aplicação já sabe como se conectar ao banco. As credenciais estão no arquivo application.properties:
 
-Host: localhost
-
-Porta: 5433
-
-Banco de Dados: postgres
-
-Usuário: postgres
-
-🔑 Senha: 123
 
 Atenção: Verifique se o seu ambiente PostgreSQL local está configurado com essas mesmas informações!
 
