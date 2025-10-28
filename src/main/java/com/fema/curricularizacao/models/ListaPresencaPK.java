@@ -15,7 +15,7 @@ import java.io.Serializable;
 public class ListaPresencaPK implements Serializable {
 
     @Column(name = "evento_id")
-    private int idEvento;
+    private Long idEvento;
 
     @Column(name = "nome_aluno")
     private String nomeAluno;

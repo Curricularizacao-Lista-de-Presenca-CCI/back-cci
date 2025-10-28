@@ -24,7 +24,6 @@ public class Funcionario {
 
     private String senha;
 
-    @Enumerated(EnumType.STRING)
     @Column(name="atuacao_enum")
     private Atuacao atuacao;
 

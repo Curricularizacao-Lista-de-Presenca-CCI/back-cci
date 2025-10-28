@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Getter
@@ -24,7 +24,7 @@ public class Evento {
     private String titulo;
 
     @Column(name = "data")
-    private LocalDateTime data;
+    private LocalDate data;
 
     @Column(name = "local")
     private String local;
