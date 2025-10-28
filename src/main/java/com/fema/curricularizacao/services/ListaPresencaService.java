@@ -1,10 +1,12 @@
 package com.fema.curricularizacao.services;
 
 import com.fema.curricularizacao.enums.Presenca;
+import com.fema.curricularizacao.form.ColocarPresencaForm;
 import com.fema.curricularizacao.models.ListaPresenca;
 import com.fema.curricularizacao.models.ListaPresencaPK;
 import com.fema.curricularizacao.repositories.ListaPresecaRepository;
 import com.fema.curricularizacao.utils.conversao.arquivo.ExcelReaderUtil;
+import com.fema.curricularizacao.utils.exceptions.custom.ObjetoNaoEncontradoException;
 import com.fema.curricularizacao.utils.exceptions.custom.PersistenciaDadosException;
 import jakarta.transaction.Transactional;
 import org.apache.poi.ss.usermodel.Cell;
@@ -78,5 +80,17 @@ public class ListaPresencaService {
         }
         String nome = dadosCompletos.substring(indiceHifen + 3);
         return nome.trim();
+    }
+
+    @Transactional
+    public void colocarPresenca(ColocarPresencaForm presencaForm) {
+        ListaPresenca encontrarAluno = this.listaPresencaRepository.findById_IdEventoAndId_NomeAluno(presencaForm.getIdEvento() ,presencaForm.getNomeAluno())
+                .orElseThrow(() -> new ObjetoNaoEncontradoException("Não foi encontrado nenhum aluno com nome: " + extrairNomeDoParticipante(presencaForm.getNomeAluno()) + " no evento de id: " + presencaForm.getIdEvento() + "."));
+        if(encontrarAluno.getPresencaEnum() == Presenca.NAO) {
+            encontrarAluno.setPresencaEnum(Presenca.SIM);
+        } else {
+            encontrarAluno.setPresencaEnum(Presenca.NAO);
+        }
+        this.listaPresencaRepository.save(encontrarAluno);
     }
 }
