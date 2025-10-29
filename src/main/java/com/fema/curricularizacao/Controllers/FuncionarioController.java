@@ -29,7 +29,8 @@ public class FuncionarioController {
                     funcionario.getEmail(),
                     null,
                     funcionario.getAtuacao(),
-                    null
+                    null,
+                    funcionario.getAtivo()
             );
             return ResponseEntity.ok(dto);
         } else {
@@ -53,7 +54,8 @@ public class FuncionarioController {
                     funcionarioAutenticado.getEmail(),
                     null,
                     funcionarioAutenticado.getAtuacao(),
-                    jwtToken
+                    jwtToken,
+                    funcionarioAutenticado.getAtivo()
             );
             return ResponseEntity.ok(funcionarioAutenticadoDTO);
         } else {

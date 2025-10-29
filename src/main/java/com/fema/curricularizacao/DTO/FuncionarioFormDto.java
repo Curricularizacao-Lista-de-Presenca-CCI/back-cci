@@ -32,6 +32,7 @@ public class FuncionarioFormDto {
         funcionario.setEmail(this.email);
         funcionario.setSenha(this.senha);
         funcionario.setAtuacao(this.atuacao);
+        funcionario.setAtivo(true);
         return funcionario;
     }
 }

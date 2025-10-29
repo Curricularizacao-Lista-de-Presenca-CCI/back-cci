@@ -27,6 +27,9 @@ public class Funcionario {
     @Column(name="atuacao_enum")
     private Atuacao atuacao;
 
+    @Column(name = "ativo")
+    private Boolean ativo;
+
     public  Funcionario(Long id, String nome, String email, String senha, Atuacao atuacao) {
         this.id = id;
         this.nome = nome;

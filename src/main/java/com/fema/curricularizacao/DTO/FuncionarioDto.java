@@ -13,13 +13,15 @@ public class FuncionarioDto{
     private String senha;
     private Atuacao atuacao;
     private String token;
+    private boolean ativo;
 
-    public FuncionarioDto(Long id, String nome, String email, String senha, Atuacao atuacao, String token) {
+    public FuncionarioDto(Long id, String nome, String email, String senha, Atuacao atuacao, String token, boolean ativo) {
         this.id = id;
         this.nome = nome;
         this.email = email;
         this.senha = senha;
         this.atuacao = atuacao;
         this.token = token;
+        this.ativo = ativo;
     }
 }
