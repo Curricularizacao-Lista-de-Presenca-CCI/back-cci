@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Lista de Chamada</title>
+    <style>
+        body { font-family: Arial, sans-serif; font-size: 10pt; }
+        h1 { color: #004488; border-bottom: 2px solid #ccc; padding-bottom: 5px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    </style>
+</head>
+<body>
+
+<h1>Lista de Chamada do Evento</h1>
+
+<div>
+    <p><strong>Evento:</strong> <span th:text="${evento.titulo}">[Título]</span></p>
+<!--    <p><strong>Data:</strong> <span th:text="${#temporals.format(evento.data, 'dd/MM/yyyy')}">[Data]</span></p>-->
+    <p><strong>Data:</strong> <span th:text="${#temporals.format(evento.data, 'dd/MM/yyyy')}">[Data]</span></p>
+    <p><strong>Local:</strong> <span th:text="${evento.local}">[Local]</span></p>
+</div>
+
+<h2>Participantes</h2>
+
+<table>
+    <thead>
+    <tr>
+        <th>Identificador</th>
+        <th>Presença</th>
+    </tr>
+    </thead>
+    <tbody>
+        <tr th:each="aluno : ${alunos}">
+            <td th:text="${aluno.id} ? ${aluno.id.nomeAluno} : 'ID Ausente'"></td>
+
+            <td th:text="${aluno.presencaEnum.name()}"></td>
+        </tr>
+    </tbody>
+</table>
+
+<p style="margin-top: 30px;">Total de Registros: <span th:text="${alunos.size()}">0</span></p>
+
+<div style="text-align: center; margin-top: 50px;">
+    <img th:src="${imgPrefeitura}" alt="Logo Prefeitura" style="height: 50px; margin-right: 20px;" />
+    <img th:src="${imgAssistencia}" alt="Logo Assistência Social" style="height: 50px; margin-right: 20px;" />
+    <img th:src="${imgCCI}" alt="Logo CCI" style="height: 50px;" />
+</div>
+
+</body>
+</html>
