@@ -24,14 +24,16 @@ public class EventoService {
     private final ListaPresencaService listaPresencaService;
     private final EventoRepository eventoRepository;
     private final FuncionarioRepository funcionarioRepository;
+    private final RelatorioService relatorioService;
 
     private static final int COLUNA_DATA_EVENTO = 0;
 
     @Autowired
-    public EventoService(ListaPresencaService listaPresencaService, EventoRepository eventoRepository, FuncionarioRepository funcionarioRepository) {
+    public EventoService(ListaPresencaService listaPresencaService, EventoRepository eventoRepository, FuncionarioRepository funcionarioRepository, RelatorioService relatorioService) {
         this.listaPresencaService = listaPresencaService;
         this.eventoRepository = eventoRepository;
         this.funcionarioRepository = funcionarioRepository;
+        this.relatorioService = relatorioService;
     }
 
     @Transactional
@@ -78,6 +80,7 @@ public class EventoService {
             novoEvento.setTitulo(extrairTituloDoMetadado(metadadosCompletos));
             novoEvento.setData(LocalDateUtils.converterStringParaLocalDate(dataString));
             novoEvento.setArquivo(null);
+            novoEvento.setFinalizado(false);
 
         Evento eventofinal = this.eventoRepository.save(novoEvento);
         this.listaPresencaService.processarESalvarListaChamada(arquivo ,eventofinal.getId());
@@ -95,5 +98,15 @@ public class EventoService {
         } catch (Exception e) {
             throw new IllegalStateException("Falha ao extrair título do metadado: " + metadadosCompletos);
         }
+    }
+
+    @Transactional
+    public void finalizarChamada(Long idEvento) {
+        Evento evento = this.eventoRepository.findById(idEvento)
+                .orElseThrow(() -> new ObjetoNaoEncontradoException("Não foi encontrado nenhum evento com id: " + idEvento));
+        evento.setFinalizado(true);
+        evento.setArquivo(this.relatorioService.gerarRelatorioListaChamada(idEvento));
+
+        this.eventoRepository.save(evento);
     }
 }
