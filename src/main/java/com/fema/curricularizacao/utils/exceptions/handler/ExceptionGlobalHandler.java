@@ -1,9 +1,6 @@
 package com.fema.curricularizacao.utils.exceptions.handler;
 
-import com.fema.curricularizacao.utils.exceptions.custom.ArquivoInvalidoException;
-import com.fema.curricularizacao.utils.exceptions.custom.ObjetoNaoEncontradoException;
-import com.fema.curricularizacao.utils.exceptions.custom.PersistenciaDadosException;
-import com.fema.curricularizacao.utils.exceptions.custom.TokenInvalidaException;
+import com.fema.curricularizacao.utils.exceptions.custom.*;
 import com.fema.curricularizacao.utils.exceptions.model.ExcecaoPadronizada;
 import com.fema.curricularizacao.utils.exceptions.model.ValidationError;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,6 +19,12 @@ import java.util.Objects;
 
 @ControllerAdvice
 public class ExceptionGlobalHandler {
+
+    @ExceptionHandler(ErroConversaoHTMLPDF.class)
+    public ResponseEntity<ExcecaoPadronizada> erroConversaoHTMLPDF(
+            ErroConversaoHTMLPDF exception, HttpServletRequest request) {
+        return padronizarExcecao(HttpStatus.BAD_REQUEST, "Falha na conversão do HTML", exception, request);
+    }
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ExcecaoPadronizada> handleAuthenticationException(
