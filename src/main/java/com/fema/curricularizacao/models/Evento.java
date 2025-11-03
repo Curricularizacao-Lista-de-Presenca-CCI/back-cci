@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -29,10 +28,13 @@ public class Evento {
     @Column(name = "local")
     private String local;
 
-    @Column(name = "uuid_arquivo")
-    private UUID arquivo;
+    @Column(name = "arquivo")
+    private byte[] arquivo;
 
     @ManyToOne
     @JoinColumn(name = "funcionario_id")
     private Funcionario funcionario;
+
+    @Column(name = "finalizado")
+    private Boolean finalizado;
 }
