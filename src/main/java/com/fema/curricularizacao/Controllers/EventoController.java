@@ -23,4 +23,10 @@ public class EventoController {
             this.eventoService.cadastrarEventoComLista(arquivoForm, multipartFile);
             return new ResponseEntity<>(HttpStatus.CREATED);
     }
+
+    @PostMapping(value = "/finalizar-chamada/{idEvento}")
+    public ResponseEntity<Object> finalizarChamada(@PathVariable Long idEvento){
+        this.eventoService.finalizarChamada(idEvento);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
