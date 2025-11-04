@@ -1,19 +1,22 @@
 package com.fema.curricularizacao.services;
 
 import com.fema.curricularizacao.DTO.FuncionarioFormDto;
+import com.fema.curricularizacao.DTO.FuncionariosAtivosDTO;
 import com.fema.curricularizacao.models.Funcionario;
 import com.fema.curricularizacao.repositories.FuncionarioRepository;
+import com.fema.curricularizacao.utils.exceptions.custom.ObjetoNaoEncontradoException;
 import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class FuncionarioService {
 
     private final PasswordEncoder passwordEncoder;
-    private FuncionarioRepository funcionarioRepository;
+    private final FuncionarioRepository funcionarioRepository;
     public FuncionarioService(FuncionarioRepository funcionarioRepository, PasswordEncoder passwordEncoder) {
         this.funcionarioRepository = funcionarioRepository;
         this.passwordEncoder = passwordEncoder;
@@ -45,5 +48,13 @@ public class FuncionarioService {
         String senhaCriptografada = passwordEncoder.encode(funcionario.getSenha());
         funcionario.setSenha(senhaCriptografada);
         this.funcionarioRepository.save(funcionario);
+    }
+
+    public List<FuncionariosAtivosDTO> buscarTodosOsFuncionariosAtivos() {
+        List<Funcionario> listaFuncionarios = this.funcionarioRepository.findAllByAtivo(true);
+        if (listaFuncionarios.isEmpty()){
+            throw new ObjetoNaoEncontradoException("Não foi encontrado nenhum funcionário ativo.");
+        }
+        return FuncionariosAtivosDTO.converter(listaFuncionarios);
     }
 }

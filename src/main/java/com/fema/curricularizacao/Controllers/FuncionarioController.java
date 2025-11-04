@@ -2,11 +2,14 @@ package com.fema.curricularizacao.Controllers;
 
 import com.fema.curricularizacao.DTO.FuncionarioDto;
 import com.fema.curricularizacao.DTO.FuncionarioFormDto;
+import com.fema.curricularizacao.DTO.FuncionariosAtivosDTO;
 import com.fema.curricularizacao.auth.TokenService;
 import com.fema.curricularizacao.models.Funcionario;
 import com.fema.curricularizacao.services.FuncionarioService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/funcionario")
@@ -67,5 +70,10 @@ public class FuncionarioController {
     public ResponseEntity<Void> cadastrarFuncionario(@RequestBody FuncionarioFormDto form) {
         this.funcionarioService.cadastrarFuncionario(form);
         return ResponseEntity.status(201).build();
+    }
+
+    @GetMapping("/buscar-funcionarios-ativos")
+    public ResponseEntity<List<FuncionariosAtivosDTO>> buscarFuncionarios (){
+        return ResponseEntity.status(200).body(this.funcionarioService.buscarTodosOsFuncionariosAtivos());
     }
 }
