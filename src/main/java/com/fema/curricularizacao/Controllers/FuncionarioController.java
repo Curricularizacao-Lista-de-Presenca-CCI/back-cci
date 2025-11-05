@@ -3,6 +3,7 @@ package com.fema.curricularizacao.Controllers;
 import com.fema.curricularizacao.DTO.FuncionarioDto;
 import com.fema.curricularizacao.DTO.FuncionarioFormDto;
 import com.fema.curricularizacao.DTO.FuncionariosAtivosDTO;
+import com.fema.curricularizacao.DTO.InformacoesDosFuncionariosDTO;
 import com.fema.curricularizacao.auth.TokenService;
 import com.fema.curricularizacao.models.Funcionario;
 import com.fema.curricularizacao.services.FuncionarioService;
@@ -75,5 +76,10 @@ public class FuncionarioController {
     @GetMapping("/buscar-funcionarios-ativos")
     public ResponseEntity<List<FuncionariosAtivosDTO>> buscarFuncionarios (){
         return ResponseEntity.status(200).body(this.funcionarioService.buscarTodosOsFuncionariosAtivos());
+    }
+
+    @GetMapping("/buscar-funcionarios")
+    public ResponseEntity<List<InformacoesDosFuncionariosDTO>> buscarTodosFuncionarios(){
+        return ResponseEntity.status(200).body(this.funcionarioService.buscarTodosFuncionarios());
     }
 }

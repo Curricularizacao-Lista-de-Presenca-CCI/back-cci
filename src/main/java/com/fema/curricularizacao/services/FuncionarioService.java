@@ -2,8 +2,10 @@ package com.fema.curricularizacao.services;
 
 import com.fema.curricularizacao.DTO.FuncionarioFormDto;
 import com.fema.curricularizacao.DTO.FuncionariosAtivosDTO;
+import com.fema.curricularizacao.DTO.InformacoesDosFuncionariosDTO;
 import com.fema.curricularizacao.models.Funcionario;
 import com.fema.curricularizacao.repositories.FuncionarioRepository;
+import com.fema.curricularizacao.repositories.ListaPresecaRepository;
 import com.fema.curricularizacao.utils.exceptions.custom.ObjetoNaoEncontradoException;
 import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,9 +19,12 @@ public class FuncionarioService {
 
     private final PasswordEncoder passwordEncoder;
     private final FuncionarioRepository funcionarioRepository;
-    public FuncionarioService(FuncionarioRepository funcionarioRepository, PasswordEncoder passwordEncoder) {
+    private final ListaPresecaRepository listaPresecaRepository;
+
+    public FuncionarioService(FuncionarioRepository funcionarioRepository, PasswordEncoder passwordEncoder, ListaPresecaRepository listaPresecaRepository) {
         this.funcionarioRepository = funcionarioRepository;
         this.passwordEncoder = passwordEncoder;
+        this.listaPresecaRepository = listaPresecaRepository;
     }
 
     public Funcionario buscarFuncionarioPorEmail(String email) {
@@ -56,5 +61,10 @@ public class FuncionarioService {
             throw new ObjetoNaoEncontradoException("Não foi encontrado nenhum funcionário ativo.");
         }
         return FuncionariosAtivosDTO.converter(listaFuncionarios);
+    }
+
+    public List<InformacoesDosFuncionariosDTO> buscarTodosFuncionarios() {
+        List<Funcionario> encontrarFuncionarios = this.funcionarioRepository.findAll();
+        return InformacoesDosFuncionariosDTO.converter(encontrarFuncionarios);
     }
 }
