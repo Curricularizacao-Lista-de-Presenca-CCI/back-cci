@@ -12,4 +12,6 @@ public interface ListaPresecaRepository extends JpaRepository<ListaPresenca, Lon
     Optional<ListaPresenca> findById_IdEventoAndId_NomeAluno(Long idEvento, String nomeAluno);
 
     List<ListaPresenca> findById_IdEvento(Long idEvento);
+
+    List<ListaPresenca> findAllById_IdEvento(Long idEvento);
 }

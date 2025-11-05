@@ -1,5 +1,6 @@
 package com.fema.curricularizacao.services;
 
+import com.fema.curricularizacao.DTO.ListaPresencaDTO;
 import com.fema.curricularizacao.enums.Presenca;
 import com.fema.curricularizacao.form.ColocarPresencaForm;
 import com.fema.curricularizacao.models.ListaPresenca;
@@ -92,5 +93,9 @@ public class ListaPresencaService {
             encontrarAluno.setPresencaEnum(Presenca.NAO);
         }
         this.listaPresencaRepository.save(encontrarAluno);
+    }
+
+    public List<ListaPresencaDTO> buscarTodosAlunos(Long idEvento) {
+        return ListaPresencaDTO.converter(this.listaPresencaRepository.findAllById_IdEvento(idEvento));
     }
 }
