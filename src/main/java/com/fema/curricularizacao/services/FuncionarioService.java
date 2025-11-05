@@ -57,9 +57,6 @@ public class FuncionarioService {
 
     public List<FuncionariosAtivosDTO> buscarTodosOsFuncionariosAtivos() {
         List<Funcionario> listaFuncionarios = this.funcionarioRepository.findAllByAtivo(true);
-        if (listaFuncionarios.isEmpty()){
-            throw new ObjetoNaoEncontradoException("Não foi encontrado nenhum funcionário ativo.");
-        }
         return FuncionariosAtivosDTO.converter(listaFuncionarios);
     }
 
