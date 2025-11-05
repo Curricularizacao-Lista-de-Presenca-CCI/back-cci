@@ -1,5 +1,6 @@
 package com.fema.curricularizacao.Controllers;
 
+import com.fema.curricularizacao.DTO.BuscarEventosCadastradoDTO;
 import com.fema.curricularizacao.form.ArquivoForm;
 import com.fema.curricularizacao.services.EventoService;
 import org.springframework.http.HttpStatus;
@@ -7,6 +8,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/evento")
@@ -28,5 +31,10 @@ public class EventoController {
     public ResponseEntity<Object> finalizarChamada(@PathVariable Long idEvento){
         this.eventoService.finalizarChamada(idEvento);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/buscar-lista-chamadas/{idFuncionario}")
+    public ResponseEntity<List<BuscarEventosCadastradoDTO>> buscarListasChamada(@PathVariable Long idFuncionario){
+        return ResponseEntity.status(200).body(this.eventoService.buscarListasChamada(idFuncionario));
     }
 }

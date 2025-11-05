@@ -1,5 +1,7 @@
 package com.fema.curricularizacao.services;
 
+import com.fema.curricularizacao.DTO.BuscarEventosCadastradoDTO;
+import com.fema.curricularizacao.enums.Atuacao;
 import com.fema.curricularizacao.form.ArquivoForm;
 import com.fema.curricularizacao.models.Evento;
 import com.fema.curricularizacao.models.Funcionario;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Iterator;
+import java.util.List;
 
 @Service
 public class EventoService {
@@ -108,5 +111,20 @@ public class EventoService {
         evento.setArquivo(this.relatorioService.gerarRelatorioListaChamada(idEvento));
 
         this.eventoRepository.save(evento);
+    }
+
+
+    public List<BuscarEventosCadastradoDTO> buscarListasChamada(Long idFuncionario) {
+        Funcionario funcionarioEncontrado = this.funcionarioRepository.findById(idFuncionario)
+                .orElseThrow(()->new ObjetoNaoEncontradoException("Objeto Não encontrado"));
+
+        List<Evento> eventos;
+
+        if (funcionarioEncontrado.getAtuacao().equals(Atuacao.COORDENADOR)) {
+            eventos = this.eventoRepository.findAll();
+        } else {
+            eventos = this.eventoRepository.findByFuncionario_Id(idFuncionario);
+        }
+        return BuscarEventosCadastradoDTO.converter(eventos);
     }
 }
