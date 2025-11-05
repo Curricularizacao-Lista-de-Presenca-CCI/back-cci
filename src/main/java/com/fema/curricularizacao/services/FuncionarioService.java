@@ -1,8 +1,6 @@
 package com.fema.curricularizacao.services;
 
-import com.fema.curricularizacao.DTO.FuncionarioFormDto;
-import com.fema.curricularizacao.DTO.FuncionariosAtivosDTO;
-import com.fema.curricularizacao.DTO.InformacoesDosFuncionariosDTO;
+import com.fema.curricularizacao.DTO.*;
 import com.fema.curricularizacao.models.Funcionario;
 import com.fema.curricularizacao.repositories.FuncionarioRepository;
 import com.fema.curricularizacao.repositories.ListaPresecaRepository;
@@ -63,5 +61,16 @@ public class FuncionarioService {
     public List<InformacoesDosFuncionariosDTO> buscarTodosFuncionarios() {
         List<Funcionario> encontrarFuncionarios = this.funcionarioRepository.findAll();
         return InformacoesDosFuncionariosDTO.converter(encontrarFuncionarios);
+    }
+
+    @Transactional
+    public void alterarInformacoesFuncionario(AlterarFuncionarioDTO alterarFuncionarioDTO, Long idFuncionario) {
+        Funcionario funcionarEncontrado = this.funcionarioRepository.findById(idFuncionario)
+                .orElseThrow(()-> new ObjetoNaoEncontradoException("Não foi encontrado nenhum funcionário com id: " + idFuncionario));
+        funcionarEncontrado.setAtivo(alterarFuncionarioDTO.getStatusServidor());
+        funcionarEncontrado.setNome(alterarFuncionarioDTO.getNome());
+        funcionarEncontrado.setEmail(alterarFuncionarioDTO.getEmail());
+        funcionarEncontrado.setAtuacao(alterarFuncionarioDTO.getAtuacao());
+        funcionarioRepository.save(funcionarEncontrado);
     }
 }

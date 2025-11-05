@@ -1,9 +1,6 @@
 package com.fema.curricularizacao.Controllers;
 
-import com.fema.curricularizacao.DTO.FuncionarioDto;
-import com.fema.curricularizacao.DTO.FuncionarioFormDto;
-import com.fema.curricularizacao.DTO.FuncionariosAtivosDTO;
-import com.fema.curricularizacao.DTO.InformacoesDosFuncionariosDTO;
+import com.fema.curricularizacao.DTO.*;
 import com.fema.curricularizacao.auth.TokenService;
 import com.fema.curricularizacao.models.Funcionario;
 import com.fema.curricularizacao.services.FuncionarioService;
@@ -81,5 +78,11 @@ public class FuncionarioController {
     @GetMapping("/buscar-funcionarios")
     public ResponseEntity<List<InformacoesDosFuncionariosDTO>> buscarTodosFuncionarios(){
         return ResponseEntity.status(200).body(this.funcionarioService.buscarTodosFuncionarios());
+    }
+
+    @PostMapping("/alterar-informacoes-servidor/{idFuncionario}")
+    public ResponseEntity<Object> alterarInformacoesFuncionario(@RequestBody AlterarFuncionarioDTO alterarFuncionarioDTO, @PathVariable Long idFuncionario){
+        this.funcionarioService.alterarInformacoesFuncionario(alterarFuncionarioDTO ,idFuncionario);
+        return ResponseEntity.ok(200);
     }
 }
