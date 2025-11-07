@@ -3,6 +3,7 @@ package com.fema.curricularizacao.services;
 import com.fema.curricularizacao.DTO.*;
 import com.fema.curricularizacao.models.Funcionario;
 import com.fema.curricularizacao.repositories.FuncionarioRepository;
+import com.fema.curricularizacao.utils.exceptions.custom.EmailOuSenhaInvalidos;
 import com.fema.curricularizacao.utils.exceptions.custom.ObjetoNaoEncontradoException;
 import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,13 +30,13 @@ public class FuncionarioService {
     public Funcionario autenticar(String email, String senhaUsuario) {
         Optional<Funcionario> funcionarioOpt = funcionarioRepository.findByEmail(email);
         if(funcionarioOpt.isEmpty()) {
-            return null;
+            throw new EmailOuSenhaInvalidos("Email ou senha inválidos");
         }
         Funcionario funcionario = funcionarioOpt.get();
         if(passwordEncoder.matches(senhaUsuario, funcionario.getSenha())) {
             return funcionario;
         }
-        return null;
+        throw new EmailOuSenhaInvalidos("Email ou senha inválidos");
     }
 
     @Transactional
