@@ -3,7 +3,7 @@ package com.fema.curricularizacao.services;
 import com.fema.curricularizacao.models.Evento;
 import com.fema.curricularizacao.models.ListaPresenca;
 import com.fema.curricularizacao.repositories.EventoRepository;
-import com.fema.curricularizacao.repositories.ListaPresecaRepository;
+import com.fema.curricularizacao.repositories.ListaPresencaRepository;
 import com.fema.curricularizacao.utils.exceptions.custom.ErroConversaoHTMLPDF;
 import com.fema.curricularizacao.utils.exceptions.custom.ObjetoNaoEncontradoException;
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
@@ -16,14 +16,13 @@ import org.springframework.util.ResourceUtils;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 @Service
 public class RelatorioService {
 
     @Autowired private TemplateEngine templateEngine;
     @Autowired private EventoRepository eventoRepository;
-    @Autowired private ListaPresecaRepository listaPresencaRepository;
+    @Autowired private ListaPresencaRepository listaPresencaRepository;
 
     private static final String CLASSPATH_BASE = "classpath:";
 
@@ -33,7 +32,7 @@ public class RelatorioService {
         Evento evento = eventoRepository.findById(idEvento)
                 .orElseThrow(() -> new ObjetoNaoEncontradoException("Não foi encontrado nenhum evento com id: " + idEvento));
 
-        List<ListaPresenca> listaPresenca = listaPresencaRepository.findById_IdEvento(idEvento);
+        ListaPresenca listaPresenca = listaPresencaRepository.findById_IdEvento(idEvento);
 
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         String baseUri;

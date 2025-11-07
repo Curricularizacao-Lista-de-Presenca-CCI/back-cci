@@ -8,10 +8,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ListaPresecaRepository extends JpaRepository<ListaPresenca, Long> {
+public interface ListaPresencaRepository extends JpaRepository<ListaPresenca, Long> {
     Optional<ListaPresenca> findById_IdEventoAndId_NomeAluno(Long idEvento, String nomeAluno);
 
-    List<ListaPresenca> findById_IdEvento(Long idEvento);
+    ListaPresenca findById_IdEvento(Long idEvento);
 
     List<ListaPresenca> findAllById_IdEvento(Long idEvento);
 }
