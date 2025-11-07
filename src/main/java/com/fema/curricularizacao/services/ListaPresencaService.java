@@ -3,8 +3,10 @@ package com.fema.curricularizacao.services;
 import com.fema.curricularizacao.DTO.ListaPresencaDTO;
 import com.fema.curricularizacao.enums.Presenca;
 import com.fema.curricularizacao.form.ColocarPresencaForm;
+import com.fema.curricularizacao.models.Evento;
 import com.fema.curricularizacao.models.ListaPresenca;
 import com.fema.curricularizacao.models.ListaPresencaPK;
+import com.fema.curricularizacao.repositories.EventoRepository;
 import com.fema.curricularizacao.repositories.ListaPresecaRepository;
 import com.fema.curricularizacao.utils.conversao.arquivo.ExcelReaderUtil;
 import com.fema.curricularizacao.utils.exceptions.custom.ObjetoNaoEncontradoException;
@@ -24,10 +26,13 @@ public class ListaPresencaService {
 
     private final ListaPresecaRepository listaPresencaRepository;
 
+    private final EventoRepository eventoRepository;
+
     private static final int COLUNA_DADOS_PARTICIPANTE = 2;
 
-    public ListaPresencaService(ListaPresecaRepository listaPresencaRepository) {
+    public ListaPresencaService(ListaPresecaRepository listaPresencaRepository, EventoRepository eventoRepository) {
         this.listaPresencaRepository = listaPresencaRepository;
+        this.eventoRepository = eventoRepository;
     }
 
     public void salvarListaDePresenca(List<ListaPresenca> presencasLista) {
@@ -96,6 +101,8 @@ public class ListaPresencaService {
     }
 
     public List<ListaPresencaDTO> buscarTodosAlunos(Long idEvento) {
-        return ListaPresencaDTO.converter(this.listaPresencaRepository.findAllById_IdEvento(idEvento));
+        Evento evento = this.eventoRepository.findById(idEvento)
+                .orElseThrow(()-> new ObjetoNaoEncontradoException("Não foi encontrado nenhum evento com o id: " + idEvento));
+        return ListaPresencaDTO.converter(this.listaPresencaRepository.findAllById_IdEvento(idEvento), evento.getData());
     }
 }
