@@ -3,7 +3,6 @@ package com.fema.curricularizacao.services;
 import com.fema.curricularizacao.DTO.*;
 import com.fema.curricularizacao.models.Funcionario;
 import com.fema.curricularizacao.repositories.FuncionarioRepository;
-import com.fema.curricularizacao.repositories.ListaPresecaRepository;
 import com.fema.curricularizacao.utils.exceptions.custom.ObjetoNaoEncontradoException;
 import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,12 +16,10 @@ public class FuncionarioService {
 
     private final PasswordEncoder passwordEncoder;
     private final FuncionarioRepository funcionarioRepository;
-    private final ListaPresecaRepository listaPresecaRepository;
 
-    public FuncionarioService(FuncionarioRepository funcionarioRepository, PasswordEncoder passwordEncoder, ListaPresecaRepository listaPresecaRepository) {
+    public FuncionarioService(FuncionarioRepository funcionarioRepository, PasswordEncoder passwordEncoder) {
         this.funcionarioRepository = funcionarioRepository;
         this.passwordEncoder = passwordEncoder;
-        this.listaPresecaRepository = listaPresecaRepository;
     }
 
     public Funcionario buscarFuncionarioPorEmail(String email) {
