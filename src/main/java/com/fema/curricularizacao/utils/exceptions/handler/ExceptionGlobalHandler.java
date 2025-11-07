@@ -20,6 +20,12 @@ import java.util.Objects;
 @ControllerAdvice
 public class ExceptionGlobalHandler {
 
+    @ExceptionHandler(PermissaoInvalida.class)
+    public ResponseEntity<ExcecaoPadronizada> permissaoInvalida(
+            PermissaoInvalida exception, HttpServletRequest request) {
+        return padronizarExcecao(HttpStatus.BAD_REQUEST, "Usuário não possui permissão.", exception, request);
+    }
+
     @ExceptionHandler(EmailOuSenhaInvalidos.class)
     public ResponseEntity<ExcecaoPadronizada> emailOuSenhaInvalidos(
             EmailOuSenhaInvalidos exception, HttpServletRequest request) {
