@@ -39,6 +39,11 @@ public class EventoController {
         return ResponseEntity.status(200).body(this.eventoService.buscarListasChamada(idFuncionario));
     }
 
+    @GetMapping("/buscar-informacao-chamada/{idEvento}")
+    public ResponseEntity<BuscarEventosCadastradoDTO> buscarInformacaoEvento(@PathVariable Long idEvento){
+        return ResponseEntity.status(200).body(this.eventoService.buscarInformacaoEvento(idEvento));
+    }
+
     @PostMapping("/alterar-lista-chamada/{idEvento}")
     public ResponseEntity<Object> alterarListaChamada(@PathVariable Long idEvento, @RequestBody EventoForm eventoForm){
         this.eventoService.alterarListaChamada(idEvento, eventoForm);

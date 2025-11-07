@@ -164,4 +164,10 @@ public class EventoService {
             throw new PersistenciaDeDados("Ainda possuem alunos, impossivel apagar chamada.");
         }
     }
+
+    public BuscarEventosCadastradoDTO buscarInformacaoEvento(Long idEvento) {
+        Evento eventoEncontrado = this.eventoRepository.findById(idEvento)
+                .orElseThrow(()-> new ObjetoNaoEncontradoException("Não foi encontrado nenhum evento com o id: " + idEvento));
+        return new BuscarEventosCadastradoDTO(eventoEncontrado);
+    }
 }
