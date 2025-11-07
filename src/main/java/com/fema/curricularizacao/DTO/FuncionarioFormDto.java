@@ -21,7 +21,7 @@ public class FuncionarioFormDto {
     private String email;
 
     @NotBlank
-    @Size(min = 1)
+    @Size(min = 8)
     private String senha;
 
     @NotBlank
