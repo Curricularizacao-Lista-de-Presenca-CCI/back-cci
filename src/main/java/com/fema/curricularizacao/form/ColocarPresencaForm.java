@@ -7,6 +7,8 @@ public class ColocarPresencaForm {
     
     private Long idEvento;
 
+    private Long idAluno;
+
     private String nomeAluno;
 
 }

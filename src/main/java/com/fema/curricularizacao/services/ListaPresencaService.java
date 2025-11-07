@@ -92,7 +92,8 @@ public class ListaPresencaService {
 
     @Transactional
     public void colocarPresenca(ColocarPresencaForm presencaForm) {
-        ListaPresenca encontrarAluno = this.listaPresencaRepository.findById_IdEventoAndId_NomeAluno(presencaForm.getIdEvento() ,presencaForm.getNomeAluno())
+        String nomeAluno = presencaForm.getIdAluno().toString() +" - "+ presencaForm.getNomeAluno();
+        ListaPresenca encontrarAluno = this.listaPresencaRepository.findById_IdEventoAndId_NomeAluno(presencaForm.getIdEvento() ,nomeAluno)
                 .orElseThrow(() -> new ObjetoNaoEncontradoException("Não foi encontrado nenhum aluno com nome: " + extrairNomeDoParticipante(presencaForm.getNomeAluno()) + " no evento de id: " + presencaForm.getIdEvento() + "."));
         if(encontrarAluno.getPresencaEnum() == Presenca.NAO) {
             encontrarAluno.setPresencaEnum(Presenca.SIM);
