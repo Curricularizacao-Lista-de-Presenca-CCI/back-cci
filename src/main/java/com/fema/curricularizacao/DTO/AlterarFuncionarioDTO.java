@@ -6,8 +6,6 @@ import lombok.Getter;
 @Getter
 public class AlterarFuncionarioDTO {
 
-    public Boolean statusServidor;
-
     private String nome;
 
     private String email;

@@ -1,10 +1,13 @@
 package com.fema.curricularizacao.services;
 
 import com.fema.curricularizacao.DTO.*;
+import com.fema.curricularizacao.enums.Atuacao;
+import com.fema.curricularizacao.form.StatusForm;
 import com.fema.curricularizacao.models.Funcionario;
 import com.fema.curricularizacao.repositories.FuncionarioRepository;
 import com.fema.curricularizacao.utils.exceptions.custom.EmailOuSenhaInvalidos;
 import com.fema.curricularizacao.utils.exceptions.custom.ObjetoNaoEncontradoException;
+import com.fema.curricularizacao.utils.exceptions.custom.PermissaoInvalida;
 import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -71,10 +74,20 @@ public class FuncionarioService {
     public void alterarInformacoesFuncionario(AlterarFuncionarioDTO alterarFuncionarioDTO, Long idFuncionario) {
         Funcionario funcionarEncontrado = this.funcionarioRepository.findById(idFuncionario)
                 .orElseThrow(()-> new ObjetoNaoEncontradoException("Não foi encontrado nenhum funcionário com id: " + idFuncionario));
-        funcionarEncontrado.setAtivo(alterarFuncionarioDTO.getStatusServidor());
         funcionarEncontrado.setNome(alterarFuncionarioDTO.getNome());
         funcionarEncontrado.setEmail(alterarFuncionarioDTO.getEmail());
         funcionarEncontrado.setAtuacao(alterarFuncionarioDTO.getAtuacao());
         funcionarioRepository.save(funcionarEncontrado);
+    }
+
+    @Transactional
+    public void alterarStatusFuncionario(StatusForm statusFuncionario) {
+        Funcionario funcionarioEncontrado = this.funcionarioRepository.findById(statusFuncionario.getIdFuncionario())
+                .orElseThrow(()-> new ObjetoNaoEncontradoException("Não foi encontrado nenhum funcionario com o id: " + statusFuncionario.getIdFuncionario()));
+        if(funcionarioEncontrado.getAtuacao().equals(Atuacao.COORDENADOR)) {
+            funcionarioEncontrado.setAtivo(statusFuncionario.getStatusFuncionario());
+        } else {
+            throw new PermissaoInvalida("Usuário não tem permissão para realizar operação");
+        }
     }
 }

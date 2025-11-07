@@ -2,6 +2,7 @@ package com.fema.curricularizacao.Controllers;
 
 import com.fema.curricularizacao.DTO.*;
 import com.fema.curricularizacao.auth.TokenService;
+import com.fema.curricularizacao.form.StatusForm;
 import com.fema.curricularizacao.models.Funcionario;
 import com.fema.curricularizacao.services.FuncionarioService;
 import org.springframework.http.ResponseEntity;
@@ -84,5 +85,11 @@ public class FuncionarioController {
     public ResponseEntity<Object> alterarInformacoesFuncionario(@RequestBody AlterarFuncionarioDTO alterarFuncionarioDTO, @PathVariable Long idFuncionario){
         this.funcionarioService.alterarInformacoesFuncionario(alterarFuncionarioDTO ,idFuncionario);
         return ResponseEntity.ok(200);
+    }
+
+    @PostMapping("/alterar-status-funcionario")
+    public ResponseEntity<Object> alterarStatusDoFuncionario(@RequestBody StatusForm statusFuncionario){
+        this.funcionarioService.alterarStatusFuncionario(statusFuncionario);
+        return ResponseEntity.status(200).build();
     }
 }
