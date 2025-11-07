@@ -9,8 +9,10 @@ import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class FuncionarioService {
@@ -53,12 +55,16 @@ public class FuncionarioService {
 
     public List<FuncionariosAtivosDTO> buscarTodosOsFuncionariosAtivos() {
         List<Funcionario> listaFuncionarios = this.funcionarioRepository.findAllByAtivo(true);
-        return FuncionariosAtivosDTO.converter(listaFuncionarios);
+        return FuncionariosAtivosDTO.converter(listaFuncionarios)
+                .stream().sorted(Comparator.comparing(FuncionariosAtivosDTO::getIdFuncionario))
+                .collect(Collectors.toList());
     }
 
     public List<InformacoesDosFuncionariosDTO> buscarTodosFuncionarios() {
         List<Funcionario> encontrarFuncionarios = this.funcionarioRepository.findAll();
-        return InformacoesDosFuncionariosDTO.converter(encontrarFuncionarios);
+        return InformacoesDosFuncionariosDTO.converter(encontrarFuncionarios)
+                .stream().sorted(Comparator.comparing(InformacoesDosFuncionariosDTO::getId))
+                .collect(Collectors.toList());
     }
 
     @Transactional

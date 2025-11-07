@@ -23,8 +23,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class EventoService {
@@ -133,7 +135,9 @@ public class EventoService {
         } else {
             eventos = this.eventoRepository.findByFuncionario_Id(idFuncionario);
         }
-        return BuscarEventosCadastradoDTO.converter(eventos);
+        return BuscarEventosCadastradoDTO.converter(eventos).stream()
+                .sorted(Comparator.comparing(BuscarEventosCadastradoDTO::getIdEvento))
+                .collect(Collectors.toList());
     }
 
     @Transactional
