@@ -20,6 +20,12 @@ import java.util.Objects;
 @ControllerAdvice
 public class ExceptionGlobalHandler {
 
+    @ExceptionHandler(EmailOuSenhaInvalidos.class)
+    public ResponseEntity<ExcecaoPadronizada> emailOuSenhaInvalidos(
+            EmailOuSenhaInvalidos exception, HttpServletRequest request) {
+        return padronizarExcecao(HttpStatus.BAD_REQUEST, "Email ou senha inválidos.", exception, request);
+    }
+
     @ExceptionHandler(PersistenciaDeDados.class)
     public ResponseEntity<ExcecaoPadronizada> persistenciaDeDados(
             PersistenciaDeDados exception, HttpServletRequest request) {
