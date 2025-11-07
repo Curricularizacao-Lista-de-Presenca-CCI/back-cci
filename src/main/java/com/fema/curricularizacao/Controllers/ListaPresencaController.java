@@ -30,4 +30,9 @@ public class ListaPresencaController {
     public ResponseEntity<List<ListaPresencaDTO>> buscarTodosAlunos(@PathVariable Long idEvento){
         return ResponseEntity.status(200).body(this.listaPresencaService.buscarTodosAlunos(idEvento));
     }
+
+    @GetMapping("/buscar-alunos-faltantes/{idEvento}")
+    public ResponseEntity<List<ListaPresencaDTO>> buscarAlunosFaltantes(@PathVariable Long idEvento){
+        return ResponseEntity.status(200).body(this.listaPresencaService.buscarAlunosFaltantes(idEvento));
+    }
 }

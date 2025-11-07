@@ -1,5 +1,6 @@
 package com.fema.curricularizacao.repositories;
 
+import com.fema.curricularizacao.enums.Presenca;
 import com.fema.curricularizacao.models.ListaPresenca;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -14,4 +15,6 @@ public interface ListaPresencaRepository extends JpaRepository<ListaPresenca, Lo
     ListaPresenca findById_IdEvento(Long idEvento);
 
     List<ListaPresenca> findAllById_IdEvento(Long idEvento);
+
+    List<ListaPresenca> findAllById_IdEventoAndPresencaEnum(Long idEvento, Presenca presenca);
 }

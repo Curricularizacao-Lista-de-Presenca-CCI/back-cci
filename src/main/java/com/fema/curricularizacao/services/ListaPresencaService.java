@@ -18,8 +18,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ListaPresencaService {
@@ -103,7 +105,9 @@ public class ListaPresencaService {
     public List<ListaPresencaDTO> buscarTodosAlunos(Long idEvento) {
         Evento evento = this.eventoRepository.findById(idEvento)
                 .orElseThrow(()-> new ObjetoNaoEncontradoException("Não foi encontrado nenhum evento com o id: " + idEvento));
-        return ListaPresencaDTO.converter(this.listaPresencaRepository.findAllById_IdEvento(idEvento), evento.getData());
+        return ListaPresencaDTO.converter(this.listaPresencaRepository.findAllById_IdEvento(idEvento), evento.getData())
+                .stream().sorted(Comparator.comparing(a->a.idAluno))
+                .collect(Collectors.toList());
     }
 
     @Transactional
@@ -112,5 +116,13 @@ public class ListaPresencaService {
         if(!alunos.isEmpty()){
             listaPresencaRepository.deleteAll(alunos);
         }
+    }
+
+    public List<ListaPresencaDTO> buscarAlunosFaltantes(Long idEvento) {
+        Evento evento = this.eventoRepository.findById(idEvento)
+                .orElseThrow(()-> new ObjetoNaoEncontradoException("Não foi encontrado nenhum evento com o id: " + idEvento));
+        return ListaPresencaDTO.converter(this.listaPresencaRepository.findAllById_IdEventoAndPresencaEnum(idEvento, Presenca.NAO), evento.getData())
+                .stream().sorted(Comparator.comparing(a->a.idAluno))
+                .collect(Collectors.toList());
     }
 }
