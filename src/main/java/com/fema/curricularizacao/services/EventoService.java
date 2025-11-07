@@ -3,14 +3,19 @@ package com.fema.curricularizacao.services;
 import com.fema.curricularizacao.DTO.BuscarEventosCadastradoDTO;
 import com.fema.curricularizacao.enums.Atuacao;
 import com.fema.curricularizacao.form.ArquivoForm;
+import com.fema.curricularizacao.form.EventoForm;
 import com.fema.curricularizacao.models.Evento;
 import com.fema.curricularizacao.models.Funcionario;
+import com.fema.curricularizacao.models.ListaPresenca;
 import com.fema.curricularizacao.repositories.EventoRepository;
 import com.fema.curricularizacao.repositories.FuncionarioRepository;
+import com.fema.curricularizacao.repositories.ListaPresencaRepository;
 import com.fema.curricularizacao.utils.conversao.arquivo.ExcelReaderUtil;
 import com.fema.curricularizacao.utils.conversao.dataHora.LocalDateUtils;
 import com.fema.curricularizacao.utils.exceptions.custom.ArquivoInvalidoException;
+import com.fema.curricularizacao.utils.exceptions.custom.EventoFinalizado;
 import com.fema.curricularizacao.utils.exceptions.custom.ObjetoNaoEncontradoException;
+import com.fema.curricularizacao.utils.exceptions.custom.PersistenciaDeDados;
 import jakarta.transaction.Transactional;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -27,15 +32,17 @@ public class EventoService {
     private final ListaPresencaService listaPresencaService;
     private final EventoRepository eventoRepository;
     private final FuncionarioRepository funcionarioRepository;
+    private final ListaPresencaRepository listaPresencaRepository;
     private final RelatorioService relatorioService;
 
     private static final int COLUNA_DATA_EVENTO = 0;
 
     @Autowired
-    public EventoService(ListaPresencaService listaPresencaService, EventoRepository eventoRepository, FuncionarioRepository funcionarioRepository, RelatorioService relatorioService) {
+    public EventoService(ListaPresencaService listaPresencaService, EventoRepository eventoRepository, FuncionarioRepository funcionarioRepository, ListaPresencaRepository listaPresencaRepository, RelatorioService relatorioService) {
         this.listaPresencaService = listaPresencaService;
         this.eventoRepository = eventoRepository;
         this.funcionarioRepository = funcionarioRepository;
+        this.listaPresencaRepository = listaPresencaRepository;
         this.relatorioService = relatorioService;
     }
 
@@ -110,6 +117,7 @@ public class EventoService {
         evento.setFinalizado(true);
         evento.setArquivo(this.relatorioService.gerarRelatorioListaChamada(idEvento));
 
+        listaPresencaService.removerTodosOsAlunos(idEvento);
         this.eventoRepository.save(evento);
     }
 
@@ -126,5 +134,30 @@ public class EventoService {
             eventos = this.eventoRepository.findByFuncionario_Id(idFuncionario);
         }
         return BuscarEventosCadastradoDTO.converter(eventos);
+    }
+
+    @Transactional
+    public void alterarListaChamada(Long idEvento, EventoForm eventoForm) {
+        Evento evento = this.eventoRepository.findById(idEvento).orElseThrow(()->new ObjetoNaoEncontradoException("Não foi encontrado nenhum evento com este id: " + idEvento));
+        if(evento.getFinalizado().equals(true)){
+            throw new EventoFinalizado("Impossivel realizar operação chamada já finalizada");
+        }
+        Funcionario funcionarioEncontrado = this.funcionarioRepository.findById(eventoForm.getFuncionario()).orElseThrow(()-> new ObjetoNaoEncontradoException("Não foi encontrado nenhum funcionario com este id: " + eventoForm.getFuncionario()));
+        evento.setLocal(eventoForm.getLocal());
+        evento.setTitulo(eventoForm.getTitulo());
+        evento.setFuncionario(funcionarioEncontrado);
+        this.eventoRepository.save(evento);
+    }
+
+    @Transactional
+    public void removerListaChamada(Long idEvento) {
+        List<ListaPresenca> buscarAlunos = this.listaPresencaRepository.findAllById_IdEvento(idEvento);
+        if(buscarAlunos.isEmpty()){
+            Evento eventoEncontrado = this.eventoRepository.findById(idEvento).orElseThrow(()-> new ObjetoNaoEncontradoException("Não foi encontrado nenhum evento com este id: " + idEvento));
+
+            eventoRepository.delete(eventoEncontrado);
+        } else {
+            throw new PersistenciaDeDados("Ainda possuem alunos, impossivel apagar chamada.");
+        }
     }
 }

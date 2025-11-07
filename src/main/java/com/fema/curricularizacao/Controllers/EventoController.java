@@ -2,6 +2,7 @@ package com.fema.curricularizacao.Controllers;
 
 import com.fema.curricularizacao.DTO.BuscarEventosCadastradoDTO;
 import com.fema.curricularizacao.form.ArquivoForm;
+import com.fema.curricularizacao.form.EventoForm;
 import com.fema.curricularizacao.services.EventoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -36,5 +37,17 @@ public class EventoController {
     @GetMapping("/buscar-lista-chamadas/{idFuncionario}")
     public ResponseEntity<List<BuscarEventosCadastradoDTO>> buscarListasChamada(@PathVariable Long idFuncionario){
         return ResponseEntity.status(200).body(this.eventoService.buscarListasChamada(idFuncionario));
+    }
+
+    @PostMapping("/alterar-lista-chamada/{idEvento}")
+    public ResponseEntity<Object> alterarListaChamada(@PathVariable Long idEvento, @RequestBody EventoForm eventoForm){
+        this.eventoService.alterarListaChamada(idEvento, eventoForm);
+        return ResponseEntity.ok(200);
+    }
+
+    @DeleteMapping("/remover-lista-chamada/{idEvento}")
+    public ResponseEntity<Object> removerListaChamada(@PathVariable Long idEvento){
+        this.eventoService.removerListaChamada(idEvento);
+        return ResponseEntity.status(200).body(200);
     }
 }

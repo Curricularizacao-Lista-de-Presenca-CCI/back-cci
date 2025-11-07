@@ -7,7 +7,7 @@ import com.fema.curricularizacao.models.Evento;
 import com.fema.curricularizacao.models.ListaPresenca;
 import com.fema.curricularizacao.models.ListaPresencaPK;
 import com.fema.curricularizacao.repositories.EventoRepository;
-import com.fema.curricularizacao.repositories.ListaPresecaRepository;
+import com.fema.curricularizacao.repositories.ListaPresencaRepository;
 import com.fema.curricularizacao.utils.conversao.arquivo.ExcelReaderUtil;
 import com.fema.curricularizacao.utils.exceptions.custom.ObjetoNaoEncontradoException;
 import com.fema.curricularizacao.utils.exceptions.custom.PersistenciaDadosException;
@@ -24,13 +24,13 @@ import java.util.List;
 @Service
 public class ListaPresencaService {
 
-    private final ListaPresecaRepository listaPresencaRepository;
+    private final ListaPresencaRepository listaPresencaRepository;
 
     private final EventoRepository eventoRepository;
 
     private static final int COLUNA_DADOS_PARTICIPANTE = 2;
 
-    public ListaPresencaService(ListaPresecaRepository listaPresencaRepository, EventoRepository eventoRepository) {
+    public ListaPresencaService(ListaPresencaRepository listaPresencaRepository, EventoRepository eventoRepository) {
         this.listaPresencaRepository = listaPresencaRepository;
         this.eventoRepository = eventoRepository;
     }
@@ -104,5 +104,13 @@ public class ListaPresencaService {
         Evento evento = this.eventoRepository.findById(idEvento)
                 .orElseThrow(()-> new ObjetoNaoEncontradoException("Não foi encontrado nenhum evento com o id: " + idEvento));
         return ListaPresencaDTO.converter(this.listaPresencaRepository.findAllById_IdEvento(idEvento), evento.getData());
+    }
+
+    @Transactional
+    public void removerTodosOsAlunos(Long idEvento) {
+        List<ListaPresenca> alunos = this.listaPresencaRepository.findAllById_IdEvento(idEvento);
+        if(!alunos.isEmpty()){
+            listaPresencaRepository.deleteAll(alunos);
+        }
     }
 }
