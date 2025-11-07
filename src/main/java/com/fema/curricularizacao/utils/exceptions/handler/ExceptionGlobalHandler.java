@@ -20,6 +20,18 @@ import java.util.Objects;
 @ControllerAdvice
 public class ExceptionGlobalHandler {
 
+    @ExceptionHandler(PersistenciaDeDados.class)
+    public ResponseEntity<ExcecaoPadronizada> persistenciaDeDados(
+            PersistenciaDeDados exception, HttpServletRequest request) {
+        return padronizarExcecao(HttpStatus.BAD_REQUEST, "Ainda há dados persistentes.", exception, request);
+    }
+
+    @ExceptionHandler(EventoFinalizado.class)
+    public ResponseEntity<ExcecaoPadronizada> eventoFinalizado(
+            EventoFinalizado exception, HttpServletRequest request) {
+        return padronizarExcecao(HttpStatus.BAD_REQUEST, "Evento já finalizado.", exception, request);
+    }
+
     @ExceptionHandler(ErroConversaoHTMLPDF.class)
     public ResponseEntity<ExcecaoPadronizada> erroConversaoHTMLPDF(
             ErroConversaoHTMLPDF exception, HttpServletRequest request) {
