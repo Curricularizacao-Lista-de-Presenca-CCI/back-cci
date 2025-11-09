@@ -16,6 +16,7 @@ import org.springframework.util.ResourceUtils;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 @Service
 public class RelatorioService {
@@ -32,7 +33,7 @@ public class RelatorioService {
         Evento evento = eventoRepository.findById(idEvento)
                 .orElseThrow(() -> new ObjetoNaoEncontradoException("Não foi encontrado nenhum evento com id: " + idEvento));
 
-        ListaPresenca listaPresenca = listaPresencaRepository.findById_IdEvento(idEvento);
+        List<ListaPresenca> listaPresenca = listaPresencaRepository.findById_IdEvento(idEvento);
 
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         String baseUri;

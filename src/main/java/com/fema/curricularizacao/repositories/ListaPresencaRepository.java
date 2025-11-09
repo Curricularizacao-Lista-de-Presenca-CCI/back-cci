@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface ListaPresencaRepository extends JpaRepository<ListaPresenca, Long> {
     Optional<ListaPresenca> findById_IdEventoAndId_NomeAluno(Long idEvento, String nomeAluno);
 
-    ListaPresenca findById_IdEvento(Long idEvento);
+    List<ListaPresenca> findById_IdEvento(Long idEvento);
 
     List<ListaPresenca> findAllById_IdEvento(Long idEvento);
 
