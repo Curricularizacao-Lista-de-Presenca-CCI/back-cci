@@ -12,17 +12,26 @@ public class BuscarEventosCadastradoDTO {
 
     public Long idEvento;
 
-    public String nomeEvento;
+    public String titulo;
 
     public String dataEvento;
+
+    public String local;
+
+    public String funcionario;
+
+    public Long idFuncionario;
 
     public Boolean finalizado;
 
     public BuscarEventosCadastradoDTO(Evento evento){
         this.idEvento = evento.getId();
-        this.nomeEvento = evento.getTitulo();
+        this.titulo = evento.getTitulo();
         this.dataEvento = LocalDateUtils.converterLocalDateParaString(evento.getData());
         this.finalizado = evento.getFinalizado();
+        this.local = evento.getLocal();
+        this.funcionario = evento.getFuncionario().getNome();
+        this.idFuncionario = evento.getFuncionario().getId();
     }
 
     public static List<BuscarEventosCadastradoDTO> converter(List<Evento> eventos){
