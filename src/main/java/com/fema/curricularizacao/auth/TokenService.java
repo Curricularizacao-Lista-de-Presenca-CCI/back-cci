@@ -28,6 +28,7 @@ public class TokenService {
 
         return Jwts.builder()
                 .setSubject(funcionario.getEmail())
+                .claim("atuacao", funcionario.getAtuacao().name())
                 .setIssuedAt(agora)
                 .setExpiration(expiracao)
                 .signWith(chave)
@@ -58,6 +59,20 @@ public class TokenService {
                     .getBody();
 
             return claims.getSubject();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public String getAtuacaoFromToken(String token) {
+        try {
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(chave)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+
+            return claims.get("atuacao", String.class);
         } catch (Exception e) {
             return null;
         }

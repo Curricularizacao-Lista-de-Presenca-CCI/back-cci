@@ -88,7 +88,26 @@ public class FuncionarioController {
     }
 
     @PostMapping("/alterar-status-funcionario")
-    public ResponseEntity<Object> alterarStatusDoFuncionario(@RequestBody StatusForm statusFuncionario){
+    public ResponseEntity<Object> alterarStatusDoFuncionario(
+            @RequestBody StatusForm statusFuncionario,
+            @RequestHeader("Authorization") String authorizationHeader) {
+
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(401).body("Token ausente ou inválido");
+        }
+
+        String token = authorizationHeader.substring(7);
+
+        if (!tokenService.isTokenValido(token)) {
+            return ResponseEntity.status(401).body("Token inválido ou expirado");
+        }
+
+        String atuacao = tokenService.getAtuacaoFromToken(token);
+
+        if (atuacao == null || !atuacao.equals("COORDENADOR")) {
+            return ResponseEntity.status(403).body("Acesso negado: apenas coordenadores podem alterar o status de funcionários");
+        }
+
         this.funcionarioService.alterarStatusFuncionario(statusFuncionario);
         return ResponseEntity.status(200).build();
     }
