@@ -32,32 +32,35 @@ SQL
 
 -- Cria a tabela 'funcionario'
 CREATE TABLE funcionario (
-    funcionario_id SERIAL PRIMARY KEY,
-    atuacao_enum VARCHAR(1),
-    nome VARCHAR(150),
-    email_usuario VARCHAR(50),
-    senha VARCHAR(50)
+   funcionario_id SERIAL PRIMARY KEY,
+   atuacao_enum VARCHAR(1),
+   nome VARCHAR(150),
+   email_usuario VARCHAR(50),
+   senha VARCHAR(50),
+   status_enum CHAR(1),
+   CONSTRAINT chk_status CHECK (status_enum IN ('ativo', 'inativo'))
 );
 
--- Cria a tabela 'evento'
+-- Cria a tabela 'evento' 
 CREATE TABLE evento (
-    evento_id SERIAL PRIMARY KEY,
-    funcionario_id INT,
-    titulo VARCHAR(50),
-    data_2 DATE,
-    local_2 VARCHAR(150),
-    uuid_arquivo VARCHAR(150),
-    FOREIGN KEY (funcionario_id) REFERENCES funcionario(funcionario_id)
+   evento_id SERIAL PRIMARY KEY,
+   funcionario_id INT,
+   titulo VARCHAR(50),
+   data_2 DATE,
+   local_2 VARCHAR(150),
+   arquivo_pdf BYTEA,
+   FOREIGN KEY (funcionario_id) REFERENCES funcionario(funcionario_id)
 );
 
 -- Cria a tabela 'lista_de_presenca'
 CREATE TABLE lista_de_presenca (
     id BIGSERIAL PRIMARY KEY,
-    evento_id INT NOT NULL,
-    nome_aluno VARCHAR(50) NOT NULL,
-    presenca_enum CHAR(1),
-    FOREIGN KEY (evento_id) REFERENCES evento(evento_id)
+   evento_id INT NOT NULL,
+   nome_aluno VARCHAR(50) NOT NULL,
+   presenca_enum CHAR(1),
+   FOREIGN KEY (evento_id) REFERENCES evento(evento_id)
 );
+
 
 🎉 Tudo Pronto!
 Com o banco de dados configurado, você já pode rodar a aplicação sem problemas.
