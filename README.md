@@ -1,70 +1,125 @@
-🚀 Configuração do Ambiente de Desenvolvimento
+## Manual do Usuário 
 
-Este guia rápido vai te ajudar a configurar o banco de dados PostgreSQL para rodar este projeto na sua máquina. Vamos lá!
+## 🛠️ Tecnologias Utilizadas
 
-✅ Pré-requisitos
-Antes de começar, você só precisa ter duas coisas instaladas:
+Este projeto foi construído utilizando as seguintes tecnologias:
 
-🐘 PostgreSQL 17: O nosso sistema de banco de dados.
+* **Java 21**
+* **Spring Boot** (para a API REST)
+* **Maven** (para gerenciamento de dependências)
+* **PostgreSQL 17** (para o banco de dados)
 
-👨‍💻 pgAdmin: Uma ferramenta visual para gerenciar o banco de forma fácil.
+---
 
-🔧 Configuração da Conexão
-A aplicação já sabe como se conectar ao banco. As credenciais estão no arquivo application.properties:
+## 🚀 Começando
 
+Este guia irá te auxiliar a configurar e executar o back-end do projeto em sua máquina local.
 
-Atenção: Verifique se o seu ambiente PostgreSQL local está configurado com essas mesmas informações!
+### 1. Pré-requisitos
 
-🏗️ Criação das Tabelas
+Antes de começar, garanta que você tenha as seguintes ferramentas instaladas e configuradas:
 
-Execução Manual do Script
+* **JDK 21** (Java Development Kit)
+* **Apache Maven**
+* **PostgreSQL 17**
+* **pgAdmin** (ou qualquer outro cliente SQL de sua preferência)
 
-Abra o pgAdmin e conecte-se ao seu servidor.
+### 2. Clonando o Repositório
 
-Encontre o banco postgres, clique com o botão direito e abra a Query Tool.
+Primeiro, clone este repositório para sua máquina local:
 
-Copie e cole o script SQL abaixo.
+```bash
+git clone (https://github.com/Curricularizacao-Lista-de-Presenca-CCI/back-cci.git)
+```
 
-Execute o script clicando no ícone de ▶️ (Play) ou pressionando F5.
+### 3. Configuração do Banco de Dados
 
-Script SQL
-SQL
+#### 3.1. Arquivo de Configuração
 
+A aplicação espera se conectar a um banco de dados local. As credenciais estão localizadas no arquivo `src/main/resources/application.properties`.
+
+**Verifique se o seu ambiente PostgreSQL local está configurado com as mesmas informações.**
+
+```properties
+# Exemplo de application.properties
+spring.datasource.url=jdbc:postgresql://localhost:5432/postgres
+spring.datasource.username=postgres
+spring.datasource.password=123
+```
+
+#### 3.2. Criação das Tabelas (Script Manual)
+
+Você precisará criar as tabelas manualmente antes de iniciar a aplicação.
+
+1.  Abra o **pgAdmin** e conecte-se ao seu servidor PostgreSQL.
+2.  Encontre o banco de dados `postgres` (ou o banco que você configurou no `application.properties`).
+3.  Clique com o botão direito nele e abra a **Query Tool**.
+4.  Copie, cole e execute o script SQL abaixo (pressione `F5` ou clique no ícone ▶️).
+
+```sql
 -- Cria a tabela 'funcionario'
 CREATE TABLE funcionario (
-   funcionario_id SERIAL PRIMARY KEY,
-   atuacao_enum VARCHAR(1),
-   nome VARCHAR(150),
-   email_usuario VARCHAR(50),
-   senha VARCHAR(50),
-   status_enum CHAR(1),
-   CONSTRAINT chk_status CHECK (status_enum IN ('ativo', 'inativo'))
+    funcionario_id SERIAL PRIMARY KEY,
+    atuacao_enum VARCHAR(1),
+    nome VARCHAR(150),
+    email_usuario VARCHAR(50),
+    senha VARCHAR(50),
+    status_enum VARCHAR(10),
+    CONSTRAINT chk_status CHECK (status_enum IN ('ativo', 'inativo'))
 );
 
 -- Cria a tabela 'evento' 
 CREATE TABLE evento (
-   evento_id SERIAL PRIMARY KEY,
-   funcionario_id INT,
-   titulo VARCHAR(50),
-   data_2 DATE,
-   local_2 VARCHAR(150),
-   arquivo_pdf BYTEA,
-   FOREIGN KEY (funcionario_id) REFERENCES funcionario(funcionario_id)
+    evento_id SERIAL PRIMARY KEY,
+    funcionario_id INT,
+    titulo VARCHAR(50),
+    data_2 DATE,
+    local_2 VARCHAR(150),
+    arquivo_pdf BYTEA,
+    FOREIGN KEY (funcionario_id) REFERENCES funcionario(funcionario_id)
 );
 
 -- Cria a tabela 'lista_de_presenca'
 CREATE TABLE lista_de_presenca (
-    id BIGSERIAL PRIMARY KEY,
-   evento_id INT NOT NULL,
-   nome_aluno VARCHAR(50) NOT NULL,
-   presenca_enum CHAR(1),
-   FOREIGN KEY (evento_id) REFERENCES evento(evento_id)
+     id BIGSERIAL PRIMARY KEY,
+    evento_id INT NOT NULL,
+    nome_aluno VARCHAR(50) NOT NULL,
+    presenca_enum CHAR(1),
+    FOREIGN KEY (evento_id) REFERENCES evento(evento_id)
 );
+```
 
+---
 
-🎉 Tudo Pronto!
-Com o banco de dados configurado, você já pode rodar a aplicação sem problemas.
+## ▶️ Executando a Aplicação
 
-Em caso de erro com o tipo de dado UUID, rodar esse comando no banco:
-ALTER TABLE evento
-ALTER COLUMN uuid_arquivo TYPE uuid USING uuid_arquivo::uuid;
+Com o banco de dados configurado, você pode iniciar o back-end.
+
+### Opção 1: Via Terminal (com Maven)
+
+1.  Abra seu terminal.
+2.  Navegue até a pasta raiz do projeto (onde está o arquivo `pom.xml`).
+3.  Execute o comando:
+
+    ```bash
+    mvn spring-boot:run
+    ```
+
+### Opção 2: Via IntelliJ IDEA
+
+1.  **Verifique a SDK do Projeto:**
+    * Vá em **File > Project Structure...**
+    * Em **Project**, certifique-se de que o **SDK** selecionado é o **Java 21**.
+
+2.  **Encontre a Classe Principal:**
+    * Navegue até a classe que contém a anotação `@SpringBootApplication` (geralmente `[NomeDoProjeto]Application.java`).
+
+3.  **Execute:**
+    * Clique no ícone verde de "Play" (▶️) ao lado da declaração da classe ou do método `main`.
+    * Selecione **Run '...Application.main()'**.
+
+4.  **Verifique o Console:**
+    * Aguarde a inicialização. Se tudo der certo, você verá a arte do Spring e a mensagem:
+    * `... Started [NomeDoProjeto]Application in ... seconds ...`
+
+Pronto! Sua aplicação está rodando localmente, geralmente em `http://localhost:8080`.
